@@ -1,0 +1,138 @@
+﻿@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Ürün Yönetimi";
+}
+
+<h2 class="mb-4">Ürün Yönetimi</h2>
+
+<!-- ============================= -->
+<!-- ✅ ÜRÜN TABLOSU -->
+<!-- ============================= -->
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Resim</th>
+            <th>Ad</th>
+            <th>Fiyat</th>
+            <th>Kategori</th>
+            <th style="width:150px;">İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Products != null && Model.Products.Any())
+        {
+            foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                        {
+                            <img src="@item.ImagePath"
+                                 width="60"
+                                 height="60"
+                                 style="object-fit:cover;" />
+                        }
+                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.Price ₺</td>
+                    <td>@item.Category?.Name</td>
+                    <td>
+                        <form method="post"
+                              asp-page-handler="Delete"
+                              asp-route-id="@item.Id"
+                              style="display:inline;">
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Silmek istediğinize emin misiniz?')">
+                                Sil
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted">
+                    Henüz ürün eklenmemiş.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- ============================= -->
+<!-- ✅ ÜRÜN EKLE BUTONU -->
+<!-- ============================= -->
+<button class="btn btn-primary mb-3"
+        data-bs-toggle="modal"
+        data-bs-target="#createModal">
+    + Ürün Ekle
+</button>
+
+<!-- ============================= -->
+<!-- ✅ EKLE MODAL -->
+<!-- ============================= -->
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni Ürün Ekle</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label>Ürün Adı</label>
+                        <input asp-for="Product.Name" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Fiyat</label>
+                        <input asp-for="Product.Price" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Açıklama</label>
+                        <textarea asp-for="Product.Description"
+                                  class="form-control"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Kategori</label>
+                        <select asp-for="Product.CategoryId"
+                                asp-items="Model.Categories"
+                                class="form-control">
+                            <option value="">Kategori Seçiniz</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Resim</label>
+                        <input asp-for="Product.Image"
+                               type="file"
+                               class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn btn-success">
+                        Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

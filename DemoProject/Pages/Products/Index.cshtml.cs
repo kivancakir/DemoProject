@@ -1,6 +1,7 @@
 ﻿using DemoProject.Models;
 using DemoProject.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using D = DemoProject.Models;
 
 namespace DemoProject.Pages.Products
 {
@@ -12,7 +13,7 @@ namespace DemoProject.Pages.Products
             this.productService = productService;
         }
 
-        public List<Product> Products { get; set; } = new();
+        public List<D.Product> Products { get; set; } = new();
 
         public async Task OnGetAsync()
         {

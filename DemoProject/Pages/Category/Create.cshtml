@@ -1,0 +1,174 @@
+﻿@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Kategori Yönetimi";
+}
+
+<h2 class="mb-4">Kategori Yönetimi</h2>
+
+<!-- ✅ KATEGORİ TABLOSU -->
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Kategori Adı</th>
+            <th style="width:200px;">İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Categories != null && Model.Categories.Any())
+        {
+            foreach (var item in Model.Categories)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <!-- Güncelle -->
+                        <button class="btn btn-warning btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal"
+                                data-id="@item.Id"
+                                data-name="@item.Name">
+                            Güncelle
+                        </button>
+
+                        <!-- Sil -->
+                        <form method="post"
+                              asp-page-handler="Delete"
+                              asp-route-id="@item.Id"
+                              style="display:inline;">
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Silmek istediğinize emin misiniz?')">
+                                Sil
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2" class="text-center text-muted">
+                    Henüz kategori eklenmemiş.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- ✅ KATEGORİ EKLE BUTONU -->
+<button class="btn btn-primary mb-3"
+        data-bs-toggle="modal"
+        data-bs-target="#createModal">
+    + Kategori Ekle
+</button>
+
+
+<!-- ===================== -->
+<!-- ✅ EKLE MODAL -->
+<!-- ===================== -->
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni Kategori Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Kategori Adı</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        İptal
+                    </button>
+                    <button type="submit"
+                            class="btn btn-success">
+                        Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===================== -->
+<!-- ✅ GÜNCELLE MODAL -->
+<!-- ===================== -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Update">
+                <div class="modal-header">
+                    <h5 class="modal-title">Kategori Güncelle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" asp-for="EditId" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Kategori Adı</label>
+                        <input asp-for="EditName" class="form-control" />
+                        <span asp-validation-for="EditName" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        İptal
+                    </button>
+                    <button type="submit"
+                            class="btn btn-success">
+                        Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Güncelle modal içini doldurma
+        var editModal = document.getElementById('editModal');
+
+        editModal.addEventListener('show.bs.modal', function (event) {
+
+            var button = event.relatedTarget;
+
+            var id = button.getAttribute('data-id');
+            var name = button.getAttribute('data-name');
+
+            document.querySelector('[name="EditId"]').value = id;
+            document.querySelector('[name="EditName"]').value = name;
+        });
+
+        // Eğer validation hatası varsa create modal açık kalsın
+        @if (!ViewData.ModelState.IsValid)
+        {
+                <text>
+                        var createModal = new bootstrap.Modal(document.getElementById('createModal'));
+                        createModal.show();
+                </text>
+        }
+    </script>
+}

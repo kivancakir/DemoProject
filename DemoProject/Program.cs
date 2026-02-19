@@ -13,6 +13,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<DemoProjectDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoryService>();
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DemoProjectDbContext>()
