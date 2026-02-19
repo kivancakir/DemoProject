@@ -1,0 +1,52 @@
+﻿@page
+@model DemoProject.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-4" style="width:400px;">
+        <h3 class="text-center mb-4">Giriş Yap</h3>
+
+        <form method="post" id="loginForm">
+            <div class="mb-3">
+                <label>Email</label>
+                <input asp-for="Input.Email" class="form-control" id="emailInput" />
+            </div>
+
+            <div class="mb-3">
+                <label>Şifre</label>
+                <input asp-for="Input.Password" type="password" class="form-control" id="passwordInput" />
+            </div>
+
+            <div class="form-check mb-3">
+                <input asp-for="Input.RememberMe" class="form-check-input" />
+                <label class="form-check-label">Beni Hatırla</label>
+            </div>
+
+            <button type="submit" id="loginButton" class="btn btn-dark w-100" disabled>
+                Giriş Yap
+            </button>
+        </form>
+
+        <div asp-validation-summary="All" class="text-danger mt-3"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const loginButton = document.getElementById("loginButton");
+
+        function validateInputs() {
+            const emailFilled = emailInput.value.trim() !== "";
+            const passwordFilled = passwordInput.value.trim() !== "";
+
+            loginButton.disabled = !(emailFilled && passwordFilled);
+        }
+
+        emailInput.addEventListener("input", validateInputs);
+        passwordInput.addEventListener("input", validateInputs);
+    </script>
+}

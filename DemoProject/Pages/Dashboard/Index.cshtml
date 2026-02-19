@@ -1,0 +1,16 @@
+﻿@page
+@model DemoProject.Pages.Dashboard.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<p>Hoş geldin @User.Identity?.Name 👋</p>
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="alert alert-info">
+        Admin yetkisine sahipsiniz.
+    </div>
+}
